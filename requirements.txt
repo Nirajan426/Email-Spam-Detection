@@ -1,0 +1,6 @@
+Flask==2.2.3
+Werkzeug==2.3.0
+nltk==3.8.1
+scikit-learn
+pandas
+numpy

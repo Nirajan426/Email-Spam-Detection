@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem 0;
+        }
+
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .app-title {
+            color: #344767;
+            font-weight: 700;
+        }
+
+        .result-box {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            transition: all 0.3s;
+        }
+
+        .spam-result {
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+        }
+
+        .ham-result {
+            background-color: #dcfce7;
+            border: 1px solid #22c55e;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #344767;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background-color: #4b5563;
+            border-color: #4b5563;
+        }
+
+        .btn-primary:hover {
+            background-color: #374151;
+            border-color: #374151;
+        }
+
+        .form-control {
+            resize: none;
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: #e13333;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="app-container">
+            <div class="app-header">
+                <h1 class="app-title">Email Spam Detector</h1>
+                <p class="text-muted">Check if an email message is spam or legitimate</p>
+            </div>
+
+            <form method="POST" action="/predict">
+                <div class="mb-3">
+                    <label for="message" class="form-label">Email Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="6"
+                        placeholder="Paste your email content here...">{{ request.form.get('message', '') }}</textarea>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Check for Spam</button>
+                </div>
+            </form>
+
+            {% if result %}
+            <div class="result-box {% if result.is_spam %}spam-result{% else %}ham-result{% endif %}">
+                <h4 class="mb-3">Analysis Result:</h4>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-5">
+                        {% if result.is_spam %}
+                        <strong>Spam Detected!</strong> This message appears to be spam.
+                        {% else %}
+                        <strong>Not Spam.</strong> This message appears to be legitimate.
+                        {% endif %}
+                    </span>
+                    <span class="badge {% if result.is_spam %}bg-danger{% else %}bg-success{% endif %}">
+                        {{ result.confidence }}% confidence
+                    </span>
+                </div>
+
+            </div>
+            {% endif %}
+
+            <p class="note">Note: It is not 100% accurate and can make mistakes</p>
+        </div>
+
+    </div>
+</body>
+
+</html>
